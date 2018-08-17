@@ -7,14 +7,17 @@ html, body {
 
 body {
 	background-color: #e6ceaa;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
 h1 {
 	text-align: center;
-	margin: 20px 0px 40px 0px;
+	margin: 5px;
 	color: #333333;
 	font-family: 'Heebo', sans-serif;
-	font-size: 40px;
+	font-size: 30px;
 }
 
 .container {
@@ -56,6 +59,22 @@ h1 {
 	background-color: #cca707;
 }
 
+.yellow-light{
+  background-color : #fed93f;
+}
+
+.blue-light{
+  background-color : #1c8cff;
+}
+
+.red-light{
+  background-color : #ff4c4c;
+}
+
+.green-light{
+  background-color : #13ff7c;
+}
+
 .controller {
     width: 185px;
     height: 185px;
@@ -67,7 +86,37 @@ h1 {
     bottom: 0;
     left: 0;
     right: 0;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: default;
+}
 
-    margin: auto;
+.count-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
 
+.count-lable {
+	align-self: center;
+	margin-right: 5px;
+	font-family: 'Heebo', sans-serif;
+	color: #242424;
+}
+
+.count {
+	display: inline-block;
+	width: 50px;
+	height: 30px;
+	background-color: #242424;
+	border-radius: 5px;
+	border: 1px solid #333333;
+}
+
+.start, .strict {
+	font-family: 'Heebo', sans-serif;
+	color: #242424;
 }
