@@ -158,7 +158,7 @@ class Simon extends Colors{
 			else {
 				this.warnPlayer();
 				if(this.strict)
-					this.start();
+					setTimeout(()=>this.start(), 500);
 				else
 					this.changeTurn(false);
 			}
