@@ -14,19 +14,19 @@ class Colors {
 			colorElem.addEventListener("click", this.colorElemClick.bind(this));
 	}
 
-	activate() {
+	clickActivate() {
 		this.active = true;
 		for(let colorElem of this.colorElems)
 			colorElem.style.cursor = "pointer";
 	}
 
-	deactivate() {
+	clickDeactivate() {
 		this.active = false;
 		for(let colorElem of this.colorElems)
 			colorElem.style.cursor = "default";
 	}
 
-	isActive() {
+	clickIsActive() {
 		return this.active;
 	}
 	colorElemClick(event) {
@@ -44,7 +44,7 @@ class Colors {
 			setTimeout(() => colorElem.classList.replace(color + '-light', color), 300);
 		}
 		else
-			alert("error occored");
+			return;
 	}
 
 	getColorElem(color) {
@@ -64,6 +64,9 @@ class Simon extends Colors{
 		super();
 		this.colorSequence = [];
 		this.userSequence = [];
+		this.winnerSequence = ["red", "green", "yellow", "blue"];
+		this.gameWon = false;
+		this.winCount = 10;
 		this.counter = 0;
 		this.playerActivate = false;
 		this.strict = false;
@@ -73,32 +76,17 @@ class Simon extends Colors{
 		document.getElementsByClassName("strict")[0].addEventListener("click", (event) => this.toggleStrict(event));
 	}
 
-	incrementCounter() {
-		this.counter++;
-		this.counterView.textContent = this.counter;
-	}
-
-	extendColorSequence() {
-		this.colorSequence.push(this.getRandomColor());
-	}
-
-	playColors() {
-		let waitTime = 0;
-		for(let color of this.colorSequence) {
-			let colorElem = this.getColorElem(color);
-			setTimeout(() => this.colorElemBlink(colorElem), waitTime * 1000 + 1000);
-			waitTime++;
-		}
-		this.playerActivate = true;
-		setTimeout(()=>this.changeTurn(false),waitTime * 1000 + 1000);
-	}
-
-	start() {
+	reset() {
 		this.colorSequence = [];
 		this.userSequence = [];
+		this.gameWon = false;
 		this.counter = 0;
 		this.counterView.textContent = this.counter;
 		this.playerActivate = false;
+	}
+
+	start() {
+		this.reset();
 		this.changeTurn(true);
 	}
 
@@ -115,27 +103,60 @@ class Simon extends Colors{
 	}
 
 	playerTurn() {
-		this.activate();
+		this.clickActivate();
+	}
+
+	incrementCounter() {
+		this.counter++;
+		if(this.counter >= this.winCount)
+			this.counterView.textContent = "WIN!";
+		else
+			this.counterView.textContent = this.counter;
+	}
+
+	extendColorSequence() {
+		this.colorSequence.push(this.getRandomColor());
+	}
+
+	playColors() {
+		let waitTime = 0;
+		let pause = this.gameWon? 300 : 1000;
+		for(let color of this.colorSequence) {
+			let colorElem = this.getColorElem(color);
+			setTimeout(() => this.colorElemBlink(colorElem), waitTime * pause + pause);
+			waitTime++;
+		}
+		if(!this.gameWon) {
+			this.playerActivate = true;
+			setTimeout(()=>this.changeTurn(false),waitTime * 1000 + 500);
+		}
 	}
 
 	colorElemClick(event) {
 		let color;
 		let matched;
 		let target = event.target;
-		if(this.isActive()) {
+		if(this.clickIsActive()) {
 			color = target.classList[0];
-			this.deactivate();
+			this.clickDeactivate();
 			this.playerActivate = false;
 			this.colorElemBlink(target);
 			this.userSequence.push(color);
-			matched = this.match();
+			matched = this.sequenceMatch();
 			if(matched && (this.userSequence.length === this.colorSequence.length)){
 				this.incrementCounter();
-				setTimeout(()=>this.changeTurn(true), 500);
+				this.gameWon = this.checkWin();
+				if(!this.gameWon)
+					setTimeout(()=>this.changeTurn(true), 500);
+				else {
+					this.colorSequence = [...this.winnerSequence, ...this.winnerSequence, ...this.winnerSequence, ...this.winnerSequence, ...this.winnerSequence];
+					setTimeout(()=>this.playColors(), 500);
+				}
 			}
 			else if(matched)
-				setTimeout(()=>this.playerTurn(), 500);
+				setTimeout(()=>this.playerTurn(), 350);
 			else {
+				this.warnPlayer();
 				if(this.strict)
 					this.start();
 				else
@@ -144,7 +165,7 @@ class Simon extends Colors{
 		}
 	}
 
-	match() {
+	sequenceMatch() {
 		return this.userSequence.every((color, index) =>color.includes(this.colorSequence[index]));
 	}
 
@@ -155,7 +176,17 @@ class Simon extends Colors{
 		else
 			event.target.classList.replace("on", "off")
 	}
+
+	checkWin() {
+		return this.counter >= this.winCount;
+	}
+
+	warnPlayer() {
+		this.counterView.textContent = "!!";
+		setTimeout(() => this.counterView.textContent = this.counter, 1000);
+	}
 }
+
 
 x = new Simon();
 
