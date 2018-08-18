@@ -75,6 +75,14 @@ h1 {
   background-color : #13ff7c;
 }
 
+.on {
+	color: #00a74a;
+}
+
+.off {
+	color:  #9f0f17;
+}
+
 .controller {
     width: 185px;
     height: 185px;
@@ -109,14 +117,25 @@ h1 {
 
 .count {
 	display: inline-block;
-	width: 50px;
+	width: 46px;
 	height: 30px;
+	padding-right: 4px;
+	color: #ff4c4c;
+	line-height: 30px;
+	font-size: 22px;
+	text-align: center;
 	background-color: #242424;
 	border-radius: 5px;
 	border: 1px solid #333333;
 }
 
+
 .start, .strict {
+	background-color: #e1e1e1;
 	font-family: 'Heebo', sans-serif;
+	cursor: pointer;
+}
+
+.start {
 	color: #242424;
 }
